@@ -1,0 +1,14 @@
+def linearsearch() :
+    list = ["Ali", "Bilal", "Murtaza", "Rayan", "Babar", "Yasir", "Talal", "Huzaifa", "Soomro", "Azhar"]
+    x = input("What's the name you want to search? ")
+    flag = False
+
+    for z in range(len(list)) :
+        if x == list[z] :
+            print(f"{x} placed {z + 1} in the Top Ten List of Players")
+            flag = True
+    
+    if flag == False :
+        print("Item is not in List")
+
+inearsearch()
