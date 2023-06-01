@@ -1,0 +1,20 @@
+def trgprint() :
+    x = "#"
+    y = " "
+
+    try :
+        while True :
+            n = int(input("Number of Rows: "))
+            if n > 0 :
+                break
+            else :
+                continue
+    except ValueError:
+        print("Value is not Integer")
+    z = n
+
+    for _ in range(n) :
+        print(y * (z - 1), x * (n - (z - 1)), x * (n - z), sep = "")
+        z -= 1
+
+trgprint()
