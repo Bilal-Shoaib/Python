@@ -1,0 +1,17 @@
+def printdict() :
+    House = [
+        {"name":"ali", "occupation":"student", "age" : 20,},
+        {"name":"hassan", "occupation":"businessman", "age" : 35,},
+        {"name":"bilal", "occupation":"student", "age" : 19,},
+        {"name":"azhar", "occupation":"teacher", "age" : 47,}
+    ]
+    for x in House :
+        print(x["name"], end = ", ")
+    print()
+    for x in House :
+        print(x["occupation"], end = ", ")
+    print()
+    for x in House :
+        print(x["age"], end = ", ")
+
+printdict()
