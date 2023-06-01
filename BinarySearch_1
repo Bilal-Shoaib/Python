@@ -1,0 +1,33 @@
+def basicbinarysearch() :
+    list = ["Ali", "Bilal", "Murtaza", "Rayan", "Babar", "Yasir", "Talal", "Huzaifa", "Soomro", "Azhar"]
+    bubble(list)
+
+    #for _ in range(len(list)) :
+    #    print(list[_])
+
+    up = len(list) - 1
+    lp = 0
+    mid = int((up + lp)/2)
+    flag = False
+
+    x = input("What's the name you want to search? ")
+
+    while lp != up :
+        if list[mid] == x :
+            print(f"{x} was found at {mid + 1}")
+            flag = True
+            break
+        elif list[mid] >= x :
+            up = mid - 1
+            mid = int((up + lp)/2)
+            continue
+        elif list[mid] <= x :
+            lp = mid + 1
+            mid = int((up + lp)/2)
+            continue
+    
+    if flag == False :
+        print("Item not in List")
+
+
+basicbinarysearch()
