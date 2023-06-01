@@ -1,0 +1,16 @@
+def bubble(array) :
+    #array = ["Ali", "Bilal", "Murtaza", "Rayan", "Babar", "Yasir", "Talal", "Huzaifa", "Soomro", "Azhar"]
+    temp = ""
+
+    for x in range(len(array)) :
+        for y in range(9) :
+            if array[y] > array[y + 1] :
+                temp = array[y]
+                array[y] = array[y + 1]
+                array[y + 1] = temp
+
+    for z in range(10) :
+        return array
+        #print(array[z])
+
+bubble()
