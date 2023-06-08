@@ -5,7 +5,7 @@ def trgprint() :
     try :
         while True :
             n = int(input("Number of Rows: "))
-            if n > 0 :
+            if n > 1 :
                 break
             else :
                 continue
