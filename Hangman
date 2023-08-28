@@ -30,10 +30,9 @@ def hangman() :
         #        mainarray = clothes
         #    case _ :
         #        print("Wrong Input,  Try again")
-        #        sys.exit
-        
+        #        sys.exit 
 
-    #ALTERNATE AUTOMATIC CATEGORY SELECTION
+    	#alt auto category
         array = int(random.randint(1, 4))
         match array :
             case 1 :
@@ -53,10 +52,10 @@ def hangman() :
     
         #pick a random number
         word = mainarray[random.randint(0, len(mainarray) - 1)]
-        #main code
-				LINE_CLEAR = '\x1b[2K'
+        
+	#main code
+	LINE_CLEAR = '\x1b[2K'
         LINE_UP = '\033[1A'
-        #check for match
         chr = ''
         ans = "_" * len(word)
         index = 0
@@ -82,7 +81,8 @@ def hangman() :
                     ans = ans[:index] + ans[index].replace("_",chr) + ans[index + 1:]
                     print(ans, end = "\r")
                     flag = True
-				#output result
+	
+	#output result
         if fouls == 6 :
             print("YOU LOSE")
             print("Too many bad guesses :(")
