@@ -1,0 +1,95 @@
+import sys
+import random
+
+#hangman
+def hangman() :
+    mainarray = []
+    guesses = []
+    cars = ["ferrari", "lamborghini", "pagani", "koenigsegg", "bugatti", "maserati" ,"toyota", "honda", "nissan", "lexus", "mazda", "mitsubishi"]
+    watches = ["cartier", "rolex", "omega", "casio", "tissot", "fossil", "diesel", "guess"]
+    mobiles = ["samsung", "google", "oneplus", "apple", "xiaomi", "oppo", "vivo"]
+    clothes = ["prada", "gucci", "armani", "dior", "chanel", "nike", "adidas"]
+
+    #ask to play
+    play = input("Do you want to play Hangman? (Y/N) ")
+    if play.lower() == "n" :
+        print("Bye, see you soon")
+    else :
+        print("RULES:\nYou can only Blunder 5 times\nGuessing the same character twice is a blunder\nGuessing incorrect characters is a blunder\nGOOD LUCK ;)")
+
+        #select category
+        #choice = input("Pick a Category:\n 1)Cars\n 2)Watches\n 3)Mobiles\n 4)Clothes\n")
+        #match choice.lower() :
+        #    case "cars" :
+        #        mainarray = cars
+        #    case "watches" :
+        #        mainarray = watches
+        #    case "mobiles" :
+        #        mainarray = mobiles
+        #    case "clothes" :
+        #        mainarray = clothes
+        #    case _ :
+        #        print("Wrong Input,  Try again")
+        #        sys.exit
+        
+
+    #ALTERNATE AUTOMATIC CATEGORY SELECTION
+        array = int(random.randint(1, 4))
+        match array :
+            case 1 :
+                mainarray = cars
+                print("Hint: Car Manufacturer")
+            case 2 :
+                mainarray = watches
+                print("Hint: Watch Company")
+            case 3 :
+                mainarray = mobiles
+                print("Hint: Smartphone Company")
+            case 4 :
+                mainarray = clothes
+                print("Hint: Clothing Brand")
+        
+
+    
+        #pick a random number
+        word = mainarray[random.randint(0, len(mainarray) - 1)]
+        #main code
+				LINE_CLEAR = '\x1b[2K'
+        LINE_UP = '\033[1A'
+        #check for match
+        chr = ''
+        ans = "_" * len(word)
+        index = 0
+        fouls = 0
+        flag = False
+        while ans != word and fouls <= 6 :
+            if fouls == 0 :
+                print ("Guess a Letter")
+            print(ans, end = "\r")       
+            chr = input()
+            for _ in range(len(guesses)) :
+                if chr == guesses[_] :
+                    fouls += 1
+                else :
+                    guesses[_] = chr
+            print(LINE_UP, end = LINE_CLEAR)
+            if flag != True :
+                fouls += 1
+            else :
+                flag = False
+            for index in range(len(word)) :
+                if chr.lower() == word[index:index + 1] :
+                    ans = ans[:index] + ans[index].replace("_",chr) + ans[index + 1:]
+                    print(ans, end = "\r")
+                    flag = True
+				#output result
+        if fouls == 6 :
+            print("YOU LOSE")
+            print("Too many bad guesses :(")
+            sys.exit
+        elif word == ans :
+            print(ans.capitalize())
+            print("YOU WIN")
+            print("Well Played ;)")
+
+hangman()
