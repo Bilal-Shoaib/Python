@@ -12,7 +12,6 @@ def lineupnclear(num):
         print(LINE_UP, end = LINE_CLEAR)
         x += 1
 #########################################
-
 def printstate(boardps):
     for row in boardps:
         dft = str(row)
@@ -21,7 +20,6 @@ def printstate(boardps):
         print('-----------')
     print(LINE_UP, end = LINE_CLEAR)
 ##########################################################################################
-
 def takeinput(boardti):    
     posti = input('row,col: ')
     if posti[:1].isdigit() and posti[-1:].isdigit():
@@ -49,7 +47,6 @@ def takeinput(boardti):
         takeinput(boardti)
     return posti
 #######################################################################################################
-
 def minimax(boardm, playerm, alpha, beta, depth):
     if playerm == 'x':
         othrplayer = 'o'
@@ -107,7 +104,6 @@ def plrselect(boardp):
         player = 'x'
     return player
 ###########################################
-
 def actions(boarda):
     empty, empty_spaces = 0, []
     for row in range(3):
@@ -117,7 +113,6 @@ def actions(boarda):
                 empty += 1
     return empty_spaces
 #####################################################
-
 def results(boardr, actionr, playerr):
     dupe, row, col = deepcopy(boardr), int(actionr[:1]), int(actionr[-1:])
     if (dupe[row][col] != 'x' and dupe[row][col] != 'o') or playerr == ' ':
@@ -126,7 +121,6 @@ def results(boardr, actionr, playerr):
     else:
         return boardr
 ############################################################################
-
 def utility(boardu):
     if winner(boardu) == 'x':
         return 1
@@ -135,7 +129,6 @@ def utility(boardu):
     else:
         return 0
 ###############################
-
 def terminal(boardt):
     flag, empty = False, 0
     for row in range(3):
@@ -148,7 +141,6 @@ def terminal(boardt):
         flag = True
     return flag
 ######################################################
-
 def winner(boardw):
     win = None
     for row in range(3):
@@ -175,7 +167,6 @@ def winner(boardw):
                 win = 'o'
     return win
 #########################################################################################
-
 def twoplayer(board2p):
     print('Player 1 is "X"\nPlayer 2 is "O"')
     while not terminal(board2p):
@@ -186,7 +177,6 @@ def twoplayer(board2p):
         lineupnclear(6)
     announce(board2p, 'X Player', 'O Player')
 #############################################
-
 def geniusplayer(boardgp):
     play = input('Do you want to play as (X) or (O):  ')
     lineupnclear(5)
@@ -206,7 +196,6 @@ def geniusplayer(boardgp):
         lineupnclear(6)
     announce(boardgp, 'Computer' if ai == 'x' else 'You', 'Computer' if ai == 'o' else 'You')
 #################################################################################################################################
-
 def ezplayer(boardep):
     play = input('Do you want to play as (X) or (O):  ')
     lineupnclear(5)
@@ -227,7 +216,6 @@ def ezplayer(boardep):
         lineupnclear(6)
     announce(boardep, 'Computer' if comp == 'x' else 'You', 'Computer' if comp == 'o' else 'You')
 ##################################################################################################################################
-
 def announce(boardan, x, o):
     if terminal(boardan):
         if winner(boardan) == 'x':
@@ -240,7 +228,6 @@ def announce(boardan, x, o):
             printstate(boardan)
             print("It's a DRAW")
 ####################################
-
 play = input('Do you want to play Tic Tac Toe? (Y)es or (N)o:  ')
 if play.lower() == 'n':
     sleep(0.5)
