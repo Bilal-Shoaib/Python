@@ -2,79 +2,73 @@ from time import sleep
 from math import inf
 from copy import deepcopy
 from random import choice
-LINE_CLEAR, LINE_UP = '\x1b[2K', '\033[1A'
-board = [[' ']*3 for j in range(3)]
-##########################################
-def lineupnclear(num):
-    x = 0
-    while x < num:
-        print(LINE_UP, end = LINE_CLEAR)
-        x += 1
-#########################################
+clear, up = '\x1b[2K', '\033[1A'
+board = [[' ']*3 for _ in range(3)]
+####################################################################################################################################################
+def upnclear(num):
+    for _ in range(num):
+        print(up, end = clear)
+####################################################################################################################################################
 def printstate(boardps):
     for row in boardps:
-        dft = str(row)
-        row = dft.replace(',', ' |').replace('[', ' ').replace("'", '').replace(']', ' ')
-        print(row)
+        print(' ' + ' | '.join(row))
         print('-----------')
-    print(LINE_UP, end = LINE_CLEAR)
-##########################################################################################
-def takeinput(boardti):    
-    posti = input('row,col: ')
-    if posti[:1].isdigit() and int(posti[:1]) < 3 and int(posti[:1]) > -1 and posti[-1:].isdigit() and int(posti[-1:]) < 3 and int(posti[-1:]) > -1:
-        if boardti[int(posti[:1])][int(posti[-1:])] == 'x' or boardti[int(posti[:1])][int(posti[-1:])] == 'o':
-            lineupnclear(6)
+    upnclear(1)
+####################################################################################################################################################
+def takeinput(boardti):   
+    posti = input('Number Grid (7,8,9...): ')
+    if posti.isdigit() and 0 < int(posti) < 10 :
+        allposti = ['20','21','2','10','1','12','0','01','02']
+        posti = allposti[int(posti)- 1]
+        if boardti[int(posti[:1])][int(posti[-1:])] != ' ':
+            upnclear(6)
             print("Choose another block")
-            lineupnclear(1)
             sleep(2)
+            upnclear(1)
             printstate(boardti)
-            posti = input('row,col: ')
+            return takeinput(boardti)
+        return posti
     else:
-        lineupnclear(6)
+        upnclear(6)
         print('InValid Syntax, Retry')
         sleep(2)
-        lineupnclear(1)
+        upnclear(1)
         printstate(boardti)
-        takeinput(boardti)
-    return posti
+        return takeinput(boardti)
 ####################################################################################################################################################
 def minimax(boardm, playerm, alpha, beta, depth):
     if playerm == 'x':
-        othrplayer, best = 'o', {'position':None, 'score':-inf}
+        othrplyr, best = 'o', {'position':None, 'score':-inf}
     else:
-        othrplayer, best = 'x', {'position':None, 'score':inf}
+        othrplyr, best = 'x', {'position':None, 'score':inf}
     if terminal(boardm) == 'x':
-        best['score'] = 1/depth + 1
+        best['score'] = (1/depth) + 1
         return best
     elif terminal(boardm) == 'o':
-        best['score'] = -1/depth + 1
+        best['score'] = (-1/depth) + 1
         return best
     elif terminal(boardm) == '-':
-        best['score'] = 0*depth + 1
+        best['score'] = (0*depth) + 1
         return best
     else:
         for action in actions(boardm):
             if depth < 9:
-                dupe = results(boardm, action, playerm)
-                sim_best = minimax(dupe, othrplayer, alpha, beta, depth + 1)
-                dupe = results(boardm, action, ' ')
+                sim_best = minimax(results(boardm, action, playerm), othrplyr, alpha, beta, depth + 1)
                 sim_best['position'] = action
                 if playerm == 'x':
                     if sim_best['score'] > best['score']:
                         best = sim_best
                     alpha = max(alpha, best['score'])
-                    if beta <= alpha:
-                        break
                 else:
                     if sim_best['score'] < best['score']:
                         best = sim_best
                     beta = min(beta, best['score'])
-                    if beta <= alpha:
-                        break 
+                if beta <= alpha:
+                    break 
             else:
                 break
         return best
-#############################################################################
+####################################################################################################################################################
 def plrselect(boardp):
     xmoves, omoves, empty, player = 0, 0, 0, ''
     for row in range(3):
@@ -92,16 +86,16 @@ def plrselect(boardp):
     elif xmoves == omoves:
         player = 'x'
     return player
-###############################################
+####################################################################################################################################################
 def actions(boarda):
     empty, empty_spaces = 0, []
     for row in range(3):
         for col in range(3):
             if boarda[row][col] == ' ':
-                empty_spaces.append(f'{row},{col}')
+                empty_spaces.append(f'{row}{col}')
                 empty += 1
     return empty_spaces
-###################################################
+####################################################################################################################################################
 def results(boardr, actionr, playerr):
     dupe, row, col = deepcopy(boardr), int(actionr[:1]), int(actionr[-1:])
     if (dupe[row][col] != 'x' and dupe[row][col] != 'o') or playerr == ' ':
@@ -109,122 +103,26 @@ def results(boardr, actionr, playerr):
         return dupe
     else:
         return boardr
-###########################################################################
+####################################################################################################################################################
 def terminal(boardt):
-    flag, empty = None, 0
+    empty = 0
+    for i in range(3):
+        if boardt[i][0] == boardt[i][1] == boardt[i][2] != ' ':
+            return boardt[i][0]
+        if boardt[0][i] == boardt[1][i] == boardt[2][i] != ' ':
+            return boardt[0][i]
+    if boardt[1][1] == boardt[0][0] == boardt[2][2] != ' ':
+        return boardt[1][1]
+    if boardt[1][1] == boardt[0][2] == boardt[2][0] != ' ':
+        return boardt[1][1]
     for row in range(3):
         for col in range(3):
             if boardt[row][col] == ' ':
                 empty += 1
     if empty == 0:
-        flag = '-'
-    for row in range(3):
-        col = 0
-        if boardt[row][col] == boardt[row][col + 1] == boardt[row][col + 2] == 'x':
-                flag = 'x'
-        if boardt[row][col] == boardt[row][col + 1] == boardt[row][col + 2] == 'o':
-                flag = 'o'
-    if flag != 'x' or flag != 'o':
-        for col in range(3):
-            row = 0
-            if boardt[row][col] == boardt[row + 1][col] == boardt[row + 2][col] == 'x':
-                    flag = 'x'
-            if boardt[row][col] == boardt[row + 1][col] == boardt[row + 2][col] == 'o':
-                    flag = 'o'
-    if flag != 'x' or flag != 'o':
-        if boardt[1][1] == boardt[0][0] == boardt[2][2] == 'x':
-                flag = 'x'
-        elif boardt[1][1] == boardt[0][2] == boardt[2][0] == 'x':
-                flag = 'x'
-        if boardt[1][1] == boardt[0][0] == boardt[2][2] == 'o':
-                flag = 'o'
-        elif boardt[1][1] == boardt[0][2] == boardt[2][0] == 'o':
-                flag = 'o'
-    return flag
-#######################################################################################
-def twoplayer(board2p):
-    lineupnclear(2)
-    print('Player 1 is "X"\nPlayer 2 is "O"')
-    while terminal(board2p) == None:
-        printstate(board2p)
-        plr = plrselect(board2p)
-        move = takeinput(board2p)
-        board2p = results(board2p, move, plr)
-        lineupnclear(6)
-    announce(board2p, 'X Player', 'O Player')
-    if terminal(board2p):    
-            cntn = input('Continue Playing? (Y)es or (N)o:  ')
-    return cntn
-##############################################################
-def geniusplayer(boardgp):
-    play = input('Do you want to play as (X) or (O):  ')
-    lineupnclear(5)
-    ai = 'o' if play.lower() == 'x' else 'x'
-    print('You are "X" Player\nComputer is "O" Player' if play.lower() == 'x' else 'You are "O" Player\nComputer is "X" Player')
-    while terminal(boardgp) == None:
-        printstate(boardgp)
-        plr = plrselect(boardgp)
-        if ai == plr:
-            sleep(0.5)
-            move = minimax(boardgp, ai, -inf, inf, 0)['position']
-            boardgp = results(boardgp, move, plr)
-            print('------------')
-        else:
-            move = takeinput(boardgp)
-            boardgp = results(boardgp, move, plr)
-        lineupnclear(6)
-    announce(boardgp, 'Computer' if ai == 'x' else 'You', 'Computer' if ai == 'o' else 'You')
-    if terminal(boardgp):    
-            cntn = input('Continue Playing? (Y)es or (N)o:  ')
-    return cntn
-#################################################################################################################################
-def ezplayer(boardep):
-    play = input('Do you want to play as (X) or (O):  ')
-    lineupnclear(5)
-    comp = 'o' if play.lower() == 'x' else 'x'
-    print('You are "X" Player\nComputer is "O" Player' if play.lower() == 'x' else 'You are "O" Player\nComputer is "X" Player')
-    while terminal(boardep) == None:
-        printstate(boardep)
-        plr = plrselect(boardep)
-        if comp == plr:
-            sleep(0.5)
-            action = actions(boardep)
-            move = choice(action)
-            boardep = results(boardep, move, plr)
-            print('------------')
-        else:
-            move = takeinput(boardep)
-            boardep = results(boardep, move, plr)
-        lineupnclear(6)
-    announce(boardep, 'Computer' if comp == 'x' else 'You', 'Computer' if comp == 'o' else 'You')
-    if terminal(boardep):    
-            cntn = input('Continue Playing? (Y)es or (N)o:  ')
-    return cntn
-##################################################################################################################################
-def aivcom(boardac):
-    lineupnclear(3)
-    print("It's AI vs Computer ;)")
-    comp, ai = 'x', 'o'
-    while terminal(boardac) == None:
-        printstate(boardac)
-        plr = plrselect(boardac)
-        if comp == plr:
-            sleep(1)
-            action = actions(boardac)
-            move = choice(action)
-            boardac = results(boardac, move, plr)
-            print('------------')
-        else:
-            sleep(1)
-            move = minimax(boardac, ai, -inf, inf, 0)['position']
-            boardac = results(boardac, move, plr)
-            print('------------')
-        lineupnclear(6)
-    announce(boardac, 'Computer' if comp == 'x' else 'AI', 'Computer' if comp == 'o' else 'AI')
-    if terminal(boardac):    
-            cntn = input('Continue Playing? (Y)es or (N)o:  ')
-    return cntn
-###############################################################################################
+        return '-'
+    return None
+####################################################################################################################################################
 def announce(boardan, x, o):
     if terminal(boardan) == 'x':
         printstate(boardan)
@@ -235,28 +133,68 @@ def announce(boardan, x, o):
     elif terminal(boardan) == '-':
         printstate(boardan)
         print("It's a DRAW")
-####################################
+####################################################################################################################################################
+def continu(boardc):
+    if terminal(boardc):
+        cntn = input('Continue Playing? (Y)es or (N)o:  ')
+        return cntn
+####################################################################################################################################################
+def game(boardg, p1, p2):
+    plr1, plr2, plmv1, plmv2 = p1[:-1], p2[:-1], p1[-1:], p2[-1:]
+    print(f"It's {plr1}({plmv1.upper()}) vs {plr2}({plmv2.upper()}) ;)")
+    while not terminal(boardg):
+        printstate(boardg)
+        if plmv1 == plrselect(boardg):
+            if plr1 == 'You':
+                boardg = results(boardg, takeinput(boardg), plmv1)
+            elif plr1 == 'Computer':    
+                boardg = results(boardg, choice(actions(boardg)), plmv1)
+                print('Thinking...')
+                sleep(0.5)
+            elif plr1 == 'AI':
+                boardg = results(boardg, minimax(boardg, plmv1, -inf, inf, 0)['position'], plmv1)
+                print('Thinking...')
+                sleep(0.5)
+            else:
+                boardg = results(boardg, takeinput(boardg), plmv1)
+        else:
+            if plr2 == 'You':
+                boardg = results(boardg, takeinput(boardg), plmv2)
+            elif plr2 == 'Computer':    
+                boardg = results(boardg, choice(actions(boardg)), plmv2)
+                print('Thinking...')
+                sleep(0.5)
+            elif plr2 == 'AI':
+                boardg = results(boardg, minimax(boardg, plmv2, -inf, inf, 0)['position'], plmv2)
+                print('Thinking...')
+                sleep(0.5)
+            else:
+                boardg = results(boardg, takeinput(boardg), plmv2)
+        upnclear(6)
+    announce(boardg, plr1 if plmv1 == 'x' else plr2,  plr1 if plmv1 == 'o' else plr2)
+    return continu(boardg)
+####################################################################################################################################################
 cntn = 'y'
 while cntn == 'y':
-    cntn == 'n'
-    play = input('Do you want to play Tic Tac Toe? (Y)es or (N)o:  ').lower()
+    play = input('Do YOU want to play Tic Tac Toe? (Y)es or (N)o:  ').lower()
     if play == 'n':
-        sleep(0.5)
-        cntn = aivcom(board)
+        upnclear(3)
+        cntn = game(board, 'Computerx', 'AIo')
     elif play == 'y':
-        sleep(0.5)
         play = input('Select Opponent; (C)omputer or (P)layer:  ').lower()
         if play == 'p':
-            cntn = twoplayer(board)
+            upnclear(2)
+            cntn = game(board,'Youx', 'Another Playero')
         elif play == 'c':
-            sleep(0.5)
             play = input('Select Difficulty; (E)asy or (G)enius:  ').lower()
             if play == 'g':
-                sleep(0.5)
-                cntn = geniusplayer(board)
+                play = input('Do you want to play as (X) or (O):  ').lower()
+                upnclear(5)
+                cntn = game(board, 'Youx' if play == 'x' else 'AIx', 'Youo' if play == 'o' else 'AIo')
             elif play == 'e':
-                sleep(0.5)
-                cntn = ezplayer(board)
+                play = input('Do you want to play as (X) or (O):  ').lower()
+                upnclear(5)
+                cntn = game(board, 'Youx' if play == 'x' else 'Computerx', 'Youo' if play == 'o' else 'Computero')
             else:
                 print('Invalid Choice')
         else:
