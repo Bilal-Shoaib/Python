@@ -1,10 +1,10 @@
 from random import choice
 from time import sleep
 clear, up, continue_game = '\x1b[2K', '\033[1A', 'y'
-classes = [{'group':'Automotive', 'array':['ferrari','lamborghini','pagani','koenigsegg','bugatti','lexus','porsche','alfa romeo']},
-           {'group':'Watch', 'array':['cartier','rolex','omega','casio','tissot','fossil','diesel','guess','audemars piguet','patek philippe']},
-           {'group':'Smart Phone', 'array':['samsung','google','oneplus','apple','xiaomi','oppo','motorola']},
-           {'group':'Clothing', 'array':['prada','gucci','armani','dior','chanel','nike','adidas','louis vuitton','michael kors']}]
+classes = {'Automotive':['ferrari','lamborghini','pagani','koenigsegg','bugatti','lexus','porsche','alfa romeo'],
+           'Watch':['cartier','rolex','omega','casio','tissot','fossil','diesel','guess','audemars piguet','patek philippe'],
+           'Smart Phone':['samsung','google','oneplus','apple','xiaomi','oppo','motorola'],
+           'Clothing':['prada','gucci','armani','dior','chanel','nike','adidas','louis vuitton','michael kors']}
 ###############################################################################################################################################
 def moveupnclearline(num):
     for _ in range(num): print(up, end = clear)
@@ -16,9 +16,9 @@ def print_hangman(foulsp):
     if foulsp > 4: print('    _/ \_   |\n            |\nTTTTTTTTTTTTTTTTT')
 ###############################################################################################################################################
 def automate():
-    automatic_selection = choice(classes)
-    print(f'Hint: {automatic_selection["group"]} Brand')
-    return automatic_selection['array']
+    automatic_selection = choice(list(classes.keys()))
+    print(f'Hint: {automatic_selection} Brand')
+    return classes[automatic_selection]
 ###############################################################################################################################################
 def game():
     print('Guess a letter')
