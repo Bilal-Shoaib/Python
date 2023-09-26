@@ -1,10 +1,10 @@
 from random import choice
 from time import sleep
 clear, up, continue_game = '\x1b[2K', '\033[1A', 'y'
-classes = [{'group':'Automotive', 'array':['ferrari', 'lamborghini', 'pagani', 'koenigsegg', 'bugatti', 'lexus', 'porsche']},
-           {'group':'Watch', 'array':['cartier', 'rolex', 'omega', 'casio', 'tissot', 'fossil', 'diesel', 'guess']},
-           {'group':'Smart Phone', 'array':['samsung', 'google', 'oneplus', 'apple', 'xiaomi', 'oppo', 'motorola']},
-           {'group':'Clothing', 'array':['prada', 'gucci', 'armani', 'dior', 'chanel', 'nike', 'adidas']}]
+classes = [{'group':'Automotive', 'array':['ferrari','lamborghini','pagani','koenigsegg','bugatti','lexus','porsche','alfa romeo']},
+           {'group':'Watch', 'array':['cartier','rolex','omega','casio','tissot','fossil','diesel','guess','audemars piguet','patek philippe']},
+           {'group':'Smart Phone', 'array':['samsung','google','oneplus','apple','xiaomi','oppo','motorola']},
+           {'group':'Clothing', 'array':['prada','gucci','armani','dior','chanel','nike','adidas','louis vuitton','michael kors']}]
 ###############################################################################################################################################
 def moveupnclearline(num):
     for _ in range(num): print(up, end = clear)
@@ -24,11 +24,14 @@ def game():
     print('Guess a letter')
     main_array = automate()
     word = choice(main_array)
-    answer, guesses, fouls = '_' * len(word), '', 0
+    answer, guesses, fouls = '_'*len(word), '', 0
+    if ' ' in word:
+        for count in range(len(word)):
+            if ' ' == word[count:count+1]: answer = answer[:count]+answer[count].replace('_',' ')+answer[count+1:]
     while answer != word and fouls < 5:
         print(answer, end = '\r')
         character = input()
-        if character in guesses or not (ascii('a') <=  ascii(character.lower()) <= ascii('z')) : 
+        if character in guesses or not ('a'<=character.lower()<='z') : 
             moveupnclearline(1)
             print('You have already guessed this, or it is an unsupported key. Retry')
             sleep(2)
@@ -44,7 +47,7 @@ def game():
             fouls += 1
         moveupnclearline(1)
     moveupnclearline(2)
-    print(f'YOU WIN!!!!!\nThe correct word was: {word.capitalize()}\nWell Played ;)') if word == answer else print_hangman(fouls)
+    print(f'YOU WIN!!!!!\nThe correct word was: {word.title()}\nWell Played ;)') if word == answer else print_hangman(fouls)
     return input('Continue Playing? (Y)es:  ')
 ###############################################################################################################################################
 moveupnclearline(1)
