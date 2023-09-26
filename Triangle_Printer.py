@@ -1,6 +1,6 @@
 def triangle_printer() :
     fill, empty = "/\\", " "
-    rows = input('Number of Rows: ')
+    rows = input('Number of Rows (>1): ')
     while not rows.isdigit() or int(rows) < 2:
         print('Unsupported Input, Retry')
         rows = input('Number of Rows: ')
