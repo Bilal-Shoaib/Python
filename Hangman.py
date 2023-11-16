@@ -54,7 +54,7 @@ moveupnclearline(1)
 print('Welcome to Hangman :)')
 print('You can only Blunder 5 times\nGOOD LUCK ;)')
 sleep(2)
-moveupnclearline(2)
+moveupnclearline(3)
 while continue_game == 'y':
     continue_game = game()
     moveupnclearline(1)
